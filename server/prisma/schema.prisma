@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int    @id @unique @default(autoincrement())
+  name       String
+  surname    String
+  patronymic String
+
+  Supervisor Supervisor[]
+  Student    Student[]
+}
+
+model Supervisor {
+  id        Int    @id @default(autoincrement())
+  job_title String
+  user_id   Int    @unique
+
+  User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Student {
+  id      Int    @id @default(autoincrement())
+  course   Int
+  group   String
+  user_id Int    @unique
+
+  User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Report {
+  id            Int @id @default(autoincrement())
+  university_id Int
+
+  Practices Practice[]
+
+  University University @relation(fields: [university_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model Practice {
+  id            Int    @id @default(autoincrement())
+  report_id     Int
+  student_id    Int
+  supervisor_id Int
+  direction_id  Int
+  type          String
+
+  Deadlines Deadlines[]
+
+  Report Report @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Deadlines {
+  id          Int      @id @default(autoincrement())
+  practice_id Int      @unique
+  start       DateTime
+  end         DateTime
+
+  Practice Practice @relation(fields: [practice_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Direction {
+  id    Int    @id @default(autoincrement())
+  code  String
+  title String
+
+  University University[]
+}
+
+model University {
+  id           Int    @id @default(autoincrement())
+  title        String
+  abbreviation String
+  sample_path  String @unique
+
+  Direction Direction[]
+  Report    Report[]
+}

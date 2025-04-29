@@ -1,0 +1,27 @@
+version: '3.9'
+
+volumes:
+  postgres-db:
+    external: false
+
+secrets:
+  db-password:
+    file: prisma/password.txt
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=partner3
+      - POSTGRES_USER=partner3
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 5432:5432
+    
+
+
