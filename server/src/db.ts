@@ -1,4 +1,4 @@
-import { PrismaClient } from './generated/prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { StudentExt } from './models/Student';
 
 const prismaClientSingleton = () => {
@@ -7,7 +7,6 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-    // eslint-disable-next-line no-var
     var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 

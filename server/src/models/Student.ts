@@ -1,15 +1,15 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../db";
-import { Prisma } from "../generated/prisma/client";
 import { StudentInfo } from "../interfaces";
 
 
-const extention = Prisma.defineExtension({
+const extension = Prisma.defineExtension({
     name: 'StudentModel',
     model: {
         student: {
             async createStudent(studentInfo: StudentInfo) {
                 const { User, course, group } = studentInfo;
-                const {name, surname, patronymic} = User
+                const { name, surname, patronymic, email } = User
                 await prisma.student.create({
                     data: {
                         course,
@@ -19,12 +19,13 @@ const extention = Prisma.defineExtension({
                                 name,
                                 patronymic,
                                 surname,
+                                email
                             }
                         }
                     }
                 });
             },
-            
+
             async findStudentById(id: number) {
                 return await prisma.student.findFirstOrThrow({
                     where: {
@@ -35,9 +36,9 @@ const extention = Prisma.defineExtension({
                     }
                 });
             },
-            
+
         }
     }
 });
 
-export { extention as StudentExt };
+export { extension as StudentExt };

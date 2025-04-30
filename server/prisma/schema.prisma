@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -19,6 +18,7 @@ model User {
   name       String
   surname    String
   patronymic String
+  email      String
 
   Supervisor Supervisor[]
   Student    Student[]
@@ -34,7 +34,7 @@ model Supervisor {
 
 model Student {
   id      Int    @id @default(autoincrement())
-  course   Int
+  course  Int
   group   String
   user_id Int    @unique
 
@@ -81,10 +81,13 @@ model Direction {
 }
 
 model University {
-  id           Int    @id @default(autoincrement())
-  title        String
-  abbreviation String
-  sample_path  String @unique
+  id             Int    @id @default(autoincrement())
+  title          String
+  abbreviation   String
+  address        String
+  contact_number String
+  TIN            String
+  sample_path    String @unique
 
   Direction Direction[]
   Report    Report[]
