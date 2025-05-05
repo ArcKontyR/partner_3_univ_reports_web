@@ -1,12 +1,12 @@
 <template>
   <header>
-    <div class="wrapper">
+    <div class="wrapper main-title">
       <h2 class="form-title">Точка сбора</h2>
     </div>
   </header>
-  <body>
+  <div class="main-wrapper">
     <div class="wrapper">
       <RouterView />
     </div>
-  </body>
+  </div>
 </template>

@@ -20,7 +20,7 @@ export const useStudentStore = defineStore('student', {
     },
     actions: {
         async sendInfo() {
-            await api.post('student/new', this.student);
+            await api.post('student', this.student);
         }
     },
 });

@@ -31,7 +31,10 @@
 
     <div class="form-field-title">
       <label>Вид практики</label>
-      <input v-model="formData.practiceType" type="text" required />
+      <!-- FIXME: Требует v-model для practice.type -->
+      <input 
+       
+        type="text" required />
     </div>
 
     <div class="form-field-title dual-column">
@@ -59,8 +62,9 @@
     <div class="form-field-title dual-column">
       <div class="name-field">
         <label>Начало практики</label>
+        <!-- FIXME: Требует v-model для deadlines.start -->
         <input
-          v-model="formData.practiceStartDate"
+          
           type="date"
           required
           @change="updateEndDateMin"
@@ -68,31 +72,43 @@
       </div>
       <div class="name-field">
         <label>Окончание практики</label>
-        <input v-model="formData.practiceEndDate" type="date" required />
+        <!-- FIXME: Требует v-model для deadlines.end -->
+        <input 
+          
+          type="date" 
+          required />
       </div>
     </div>
 
     <div class="form-field-title">
       <label>Название Университета/Колледжа</label>
-      <select v-model="formData.institution" required>
+      <select required>
         <option
-          v-for="institution in institutions"
-          :key="institution"
-          :value="institution"
+          v-for="(university, i) in universityStore.universities"
+          :key="i"
+          :value="university"
         >
-          {{ institution }}
+          {{ university.title }}
         </option>
       </select>
     </div>
 
     <div class="form-field-title">
       <label>Направление (профиль) обучения</label>
-      <input v-model="formData.studyDirection" type="text" required />
+      <input type="text" required />
     </div>
 
     <div class="form-field-title">
       <label>Руководитель практики от Университета</label>
-      <input v-model="formData.supervisor" type="text" required />
+      <select required>
+        <option
+          v-for="(supervisor, i) in supervisorStore.supervisors"
+          :key="i"
+          :value="supervisor"
+        >
+          {{ `${supervisor.User.surname} ${supervisor.User.name} ${supervisor.User.patronymic}`  }}
+        </option>
+      </select>
     </div>
 
     <div class="form-field-title">
@@ -100,7 +116,7 @@
       <input v-model="studentStore.student.User.email" type="email" required />
     </div>
 
-    <button type="submit" class="submit-btn">{{ sendButtonMessage }}</button>
+    <button type="submit" class="btn">{{ sendButtonMessage }}</button>
   </form>
   <FormSentPopup
     :show-modal="showModal"
@@ -111,10 +127,11 @@
 </template>
 
 <script setup lang="ts">
-import type { PracticeForm } from "@/interfaces";
 import FormSentPopup from "../components/FormSentPopup.vue";
 import { ref } from "vue";
-import { useStudentStore } from "@/stores.ts/student-store";
+import { useStudentStore } from "@/stores/student-store";
+import { useUniversityStore } from "@/stores/university-store";
+import { useSupervisorStore } from "@/stores/supervisor-store";
 
 const showModal = ref(false);
 const resMessage = ref("");
@@ -122,35 +139,15 @@ const resStatus = ref<'success' | 'error'>("success");
 const sendButtonMessage = ref('Отправить')
 
 const studentStore = useStudentStore()
+const universityStore = useUniversityStore()
+const supervisorStore = useSupervisorStore()
 
-const formData = ref<PracticeForm>({
-  Student: {
-    course: 1,
-    group: "",
-    User: {
-      name: "",
-      surname: "",
-      patronymic: "",
-      email: "",
-    },
-  },
-  practiceType: "",
-  practiceStartDate: "",
-  practiceEndDate: "",
-  studyDirection: "",
-  supervisor: "",
-  institution: "",
-});
+universityStore.getUniversities()
+supervisorStore.getSupervisors()
 
-const institutions = ref([
-  "Уральский Федеральный Университет",
-  "Московский Государственный Университет",
-  "Санкт-Петербургский Политехнический Университет",
-  "Казанский Федеральный Университет",
-]);
+
 
 async function handleSubmit() {
-  console.log("Form data:", formData.value);
 
   try {
     sendButtonMessage.value = "Отправляем...";
@@ -176,9 +173,10 @@ const closeModal = () => {
 };
 
 const updateEndDateMin = () => {
-  if (formData.value.practiceEndDate < formData.value.practiceStartDate) {
-    formData.value.practiceEndDate = formData.value.practiceStartDate;
-  }
+  // FIXME: Требует изменения после добавления v-model к соответствующим полям
+  // if (formData.value.practiceEndDate < formData.value.practiceStartDate) {
+  //   formData.value.practiceEndDate = formData.value.practiceStartDate;
+  // }
 };
 </script>
 

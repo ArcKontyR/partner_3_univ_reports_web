@@ -5,15 +5,17 @@ const router = createRouter({
   routes: [
     {
       path: '/supervisor',
-      name: 'supervisor',
       component: () => import('@/views/SupervisorView.vue'),
+      children: [
+        { path: '/supervisor', component: () => import('@/components/SupervisorForm.vue') },
+        { path: '/supervisor/university', component: () => import('@/components/UniversityForm.vue') }
+      ],
       props:{
         msg: "Партнер"
       }
     },
     {
       path: '/student',
-      name: 'student',
       component: () => import('@/views/StudentView.vue'),
       props:{
         msg: "Студент"

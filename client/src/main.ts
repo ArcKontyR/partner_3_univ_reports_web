@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import axios from 'axios'
+import { MaskInput } from 'vue-3-mask'
 
 const api = axios.create({
     baseURL: 'http://localhost:3001/api',
@@ -18,6 +19,8 @@ const app = createApp(App)
 
 app.use(router)
 app.use(pinia)
+
+app.component('MaskInput', MaskInput);
 
 
 app.mount('#app')
