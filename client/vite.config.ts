@@ -3,7 +3,6 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig((env) => {
@@ -19,7 +18,6 @@ export default defineConfig((env) => {
     plugins: [
       vue(),
       vueJsx(),
-      vueDevTools(),
     ],
     // make the API path globally available in the client
     define: {
