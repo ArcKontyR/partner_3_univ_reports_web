@@ -30,6 +30,8 @@ model Supervisor {
   user_id   Int    @unique
 
   User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  Practice Practice[]
 }
 
 model Student {
@@ -39,6 +41,8 @@ model Student {
   user_id Int    @unique
 
   User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  Practice Practice[]
 }
 
 model Report {
@@ -61,6 +65,9 @@ model Practice {
   Deadlines Deadlines[]
 
   Report Report @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Direction Direction @relation(fields: [direction_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Student Student @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Supervisor Supervisor @relation(fields: [supervisor_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Deadlines {
@@ -78,6 +85,8 @@ model Direction {
   title String
 
   University University[]
+
+  Practice Practice[]
 }
 
 model University {
