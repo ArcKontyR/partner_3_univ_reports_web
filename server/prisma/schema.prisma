@@ -86,7 +86,6 @@ model University {
   abbreviation   String
   address        String
   contact_number String
-  TIN            String
   sample_path    String @unique
 
   Direction Direction[]
