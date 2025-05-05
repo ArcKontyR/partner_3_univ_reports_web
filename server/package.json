@@ -22,7 +22,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "http": "^0.0.1-security",
-    "prisma": "^6.6.0"
+    "prisma": "^6.6.0",
+    "transliteration": "^2.3.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

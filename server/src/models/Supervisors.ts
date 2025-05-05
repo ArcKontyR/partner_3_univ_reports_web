@@ -1,19 +1,18 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../db";
-import { Student } from "../interfaces";
+import { Supervisor } from "../interfaces";
 
 
 const extension = Prisma.defineExtension({
-    name: 'StudentModel',
+    name: 'SupervisorModel',
     model: {
-        student: {
-            async createStudent(studentInfo: Student) {
-                const { User, course, group } = studentInfo;
+        supervisor: {
+            async createSupervisor(supervisorInfo: Supervisor) {
+                const { User, job_title } = supervisorInfo;
                 const { name, surname, patronymic, email } = User
-                await prisma.student.create({
+                await prisma.supervisor.create({
                     data: {
-                        course,
-                        group,
+                        job_title,
                         User: {
                             create: {
                                 name,
@@ -26,11 +25,19 @@ const extension = Prisma.defineExtension({
                 });
             },
 
-            async findStudentById(id: number) {
-                return await prisma.student.findFirstOrThrow({
+            async findSupervisorById(id: number) {
+                return await prisma.supervisor.findFirstOrThrow({
                     where: {
                         id
                     },
+                    include: {
+                        User: true
+                    }
+                });
+            },
+
+            async getSupervisors() {
+                return await prisma.supervisor.findMany({
                     include: {
                         User: true
                     }
@@ -41,4 +48,4 @@ const extension = Prisma.defineExtension({
     }
 });
 
-export { extension as StudentExt };
+export { extension as SupervisorExt };

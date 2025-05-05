@@ -5,6 +5,7 @@ import 'dotenv/config';
 import express from 'express';
 import * as http from 'http'
 import { studentRouter } from './routers/StudentRouter';
+import { supervisorRouter } from './routers/SupervisorRouter';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/student', studentRouter)
+app.use('/api/supervisor', supervisorRouter)
 
 const port = process.env.PORT || 3001;
 
