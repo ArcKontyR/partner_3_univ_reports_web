@@ -10,10 +10,11 @@ const extension = Prisma.defineExtension({
         university: {
             async createUniversity(university: University) {
                 const { abbreviation, title, address, contact_number } = university;
-                const sample_path = transliterate(abbreviation).toLowerCase();
+                const abbr = title.split(" ").map(word => word[0]).join("").toLowerCase();
+                const sample_path = `/${transliterate(abbr).slice(0,7)}`
                 await prisma.university.create({
                     data: {
-                        abbreviation,
+                        abbreviation: abbr.toUpperCase(),
                         title,
                         address,
                         contact_number,
