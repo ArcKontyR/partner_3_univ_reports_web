@@ -1,54 +1,60 @@
 export interface User {
-  id: number,
-  name: string,
-  surname: string,
-  patronymic: string,
-  email: string;
+    id: string,
+    name: string,
+    surname: string,
+    patronymic: string,
+    email: string;
 }
 
 export interface Student {
-  id: number,
-  course: number,
-  group: string,
-  User: User
+    id: string,
+    course: number,
+    group: string,
+    User: User
 }
 
 export interface Supervisor {
-  id: number,
-  job_title: string,
-  User: User
+    id: string
+    job_title: string
+    User: User
 }
 
 export interface University {
-  id: number,
-  title: string,
-  abbreviation: string,
-  address: string,
-  contact_number: string,
-  sample_path: string,
+    id: string,
+    title: string,
+    abbreviation: string,
+    address: string,
+    contact_number: string,
+    sample_path: string,
 
-  Direction: Direction[],
-  Report: Report[]
+    Direction?: Direction[]
 }
 
 export interface Direction {
-  id: number,
-  code: string,
-  title: String
+    id: string,
+    code: string,
+    title: String
 }
 
 export interface Practice {
-  id: number,
-  type: string,
-  Report: Report,
-  Direction: Direction,
-  Student: Student,
-  Supervisor: Supervisor,
-  Deadlines: Deadlines[],
+    id: string,
+    type: string,
+    Report?: Report,
+    Direction?: Direction,
+    Student?: Student,
+    University?: University,
+    Supervisor?: Supervisor,
+    Deadlines?: Deadlines,
 }
 
 export interface Deadlines {
-  id: number
-  start: Date
-  end: Date
+    id: string,
+    start: Date,
+    end: Date
 }
+
+export interface Report{
+    id: string,
+    University?: University,
+    Practices?: Practice[]
+  }

@@ -5,7 +5,9 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import axios from 'axios'
-import { MaskInput } from 'vue-3-mask'
+import PrimeVue from 'primevue/config';
+import InputMask from 'primevue/inputmask';
+import { usePassThrough } from 'primevue/passthrough'
 
 const api = axios.create({
     baseURL: 'http://localhost:3001/api',
@@ -14,13 +16,27 @@ const api = axios.create({
     }
   });
 
+const CustomPreset = usePassThrough(
+    {
+        InputMask: {
+                class: ['leading-none font-light text-2xl']
+            
+        }
+    },
+    {
+        mergeSections: true,
+        mergeProps: true
+    }
+);
+
 const pinia = createPinia()
 const app = createApp(App)
 
 app.use(router)
 app.use(pinia)
+app.use(PrimeVue, {pt: CustomPreset})
 
-app.component('MaskInput', MaskInput);
+app.component('InputMask', InputMask);
 
 
 app.mount('#app')

@@ -17,14 +17,13 @@
         >
           <div class="name-column">{{ university.title }}</div>
           <div class="action-column">
-            <button class="btn" @click="selectUniversity(university)">
-              Выбрать
-            </button>
+            <RouterLink :to="{ path: `/supervisor/university`, query: {id : university.id} }" class="btn" @click="selectUniversity(university)">Выбрать</RouterLink>
+            <!-- <button class="btn" @click="selectUniversity(university)">Выбрать</button> -->
           </div>
         </div>
       </div>
     </div>
-    <RouterLink :to="{ path: 'supervisor/university' }" class="btn">Добавить учебное заведение</RouterLink>
+    <RouterLink :to="{ path: '/supervisor/university' }" class="btn">Добавить учебное заведение</RouterLink>
   </div>
 </template>
 
@@ -39,9 +38,6 @@ const supervisorStore = useSupervisorStore();
 universityStore.getUniversities();
 supervisorStore.getSupervisors();
 
-const selectUniversity = (university: University) => {
-  console.log("Выбрано:", university);
-};
 </script>
 
 <style scoped>

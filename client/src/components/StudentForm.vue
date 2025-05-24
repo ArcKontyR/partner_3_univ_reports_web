@@ -4,7 +4,7 @@
       <div class="name-field">
         <label>Фамилия</label>
         <input
-          v-model="studentStore.student.User.surname"
+          v-model="practiceStore.practice.Student.User.surname"
           type="text"
           placeholder="Иванов"
           required
@@ -13,7 +13,7 @@
       <div class="name-field">
         <label>Имя</label>
         <input
-          v-model="studentStore.student.User.name"
+          v-model="practiceStore.practice.Student.User.name"
           type="text"
           placeholder="Иван"
           required
@@ -22,7 +22,7 @@
       <div class="name-field">
         <label>Отчество</label>
         <input
-          v-model="studentStore.student.User.patronymic"
+          v-model="practiceStore.practice.Student.User.patronymic"
           type="text"
           placeholder="Иванович"
         />
@@ -31,17 +31,17 @@
 
     <div class="form-field-title">
       <label>Вид практики</label>
-      <!-- FIXME: Требует v-model для practice.type -->
       <input 
-       
-        type="text" required />
+        v-model="practiceStore.practice.type"
+        type="text" 
+        required />
     </div>
 
     <div class="form-field-title dual-column">
       <div class="name-field">
         <label>Курс</label>
         <input
-          v-model="studentStore.student.course"
+          v-model="practiceStore.practice.Student.course"
           type="number"
           placeholder="1"
           :max="6"
@@ -51,7 +51,7 @@
       <div class="name-field">
         <label>Группа</label>
         <input
-          v-model="studentStore.student.group"
+          v-model="practiceStore.practice.Student.group"
           type="string"
           placeholder=""
           required
@@ -62,9 +62,8 @@
     <div class="form-field-title dual-column">
       <div class="name-field">
         <label>Начало практики</label>
-        <!-- FIXME: Требует v-model для deadlines.start -->
         <input
-          
+          v-model="practiceStore.practice.Deadlines.start"
           type="date"
           required
           @change="updateEndDateMin"
@@ -72,9 +71,8 @@
       </div>
       <div class="name-field">
         <label>Окончание практики</label>
-        <!-- FIXME: Требует v-model для deadlines.end -->
         <input 
-          
+          v-model="practiceStore.practice.Deadlines.end"
           type="date" 
           required />
       </div>
@@ -82,7 +80,9 @@
 
     <div class="form-field-title">
       <label>Название Университета/Колледжа</label>
-      <select required>
+      <select 
+      v-model="practiceStore.practice.University"
+      required>
         <option
           v-for="(university, i) in universityStore.universities"
           :key="i"
@@ -95,12 +95,24 @@
 
     <div class="form-field-title">
       <label>Направление (профиль) обучения</label>
-      <input type="text" required />
+      <select 
+      v-model="practiceStore.practice.Direction"
+      required>
+        <option
+          v-for="(direction, i) in practiceStore.practice.University.Direction"
+          :key="i"
+          :value="direction"
+        >
+          {{ `${direction.code} - ${direction.title}` }}
+        </option>
+      </select>
     </div>
 
     <div class="form-field-title">
       <label>Руководитель практики от Университета</label>
-      <select required>
+      <select 
+      v-model="practiceStore.practice.Supervisor"
+      required>
         <option
           v-for="(supervisor, i) in supervisorStore.supervisors"
           :key="i"
@@ -113,7 +125,7 @@
 
     <div class="form-field-title">
       <label>Почта для связи</label>
-      <input v-model="studentStore.student.User.email" type="email" required />
+      <input v-model="practiceStore.practice.Student.User.email" type="email" required />
     </div>
 
     <button type="submit" class="btn">{{ sendButtonMessage }}</button>
@@ -132,26 +144,28 @@ import { ref } from "vue";
 import { useStudentStore } from "@/stores/student-store";
 import { useUniversityStore } from "@/stores/university-store";
 import { useSupervisorStore } from "@/stores/supervisor-store";
+import { usePracticeStore } from "@/stores/practice-store";
 
 const showModal = ref(false);
 const resMessage = ref("");
 const resStatus = ref<'success' | 'error'>("success");
 const sendButtonMessage = ref('Отправить')
+const directions = ref<Direction[]>([] as Direction[]);
 
-const studentStore = useStudentStore()
+const practiceStore = usePracticeStore()
+
 const universityStore = useUniversityStore()
 const supervisorStore = useSupervisorStore()
 
 universityStore.getUniversities()
 supervisorStore.getSupervisors()
-
+practiceStore.clearData()
 
 
 async function handleSubmit() {
-
   try {
     sendButtonMessage.value = "Отправляем...";
-    const response = await studentStore.sendInfo();
+    const response = await practiceStore.sendInfo();
     
     resStatus.value = "success";
     resMessage.value = "Форма отправлена успешно";
@@ -162,8 +176,6 @@ async function handleSubmit() {
     showModal.value = true;
     sendButtonMessage.value = "Отправить"
   }
-  console.log(resMessage.value);
-  console.log(resStatus.value);
 }
 
 const closeModal = () => {
@@ -173,11 +185,12 @@ const closeModal = () => {
 };
 
 const updateEndDateMin = () => {
-  // FIXME: Требует изменения после добавления v-model к соответствующим полям
-  // if (formData.value.practiceEndDate < formData.value.practiceStartDate) {
-  //   formData.value.practiceEndDate = formData.value.practiceStartDate;
-  // }
+  if (practiceStore.practice.Deadlines.end < practiceStore.practice.Deadlines.start) {
+    practiceStore.practice.Deadlines.end = practiceStore.practice.Deadlines.start;
+  }
 };
+
+
 </script>
 
 <style scoped>
