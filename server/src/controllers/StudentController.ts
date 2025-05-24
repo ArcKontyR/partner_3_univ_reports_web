@@ -16,7 +16,7 @@ export default class StudentController {
     }
 
     public static async getInformation(req: Request, res) {
-        const studentId: number = Number(req.query.studentId)
+        const studentId: string = req.query.studentId.toString()
         if (!studentId) {
             return res.status(RequestStatuses.BadRequest).json();
         }

@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id         Int    @id @unique @default(autoincrement())
+  id         String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
   name       String
   surname    String
   patronymic String
@@ -25,9 +25,9 @@ model User {
 }
 
 model Supervisor {
-  id        Int    @id @default(autoincrement())
+  id        String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
   job_title String
-  user_id   Int    @unique
+  user_id   String    @db.Uuid
 
   User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -35,10 +35,10 @@ model Supervisor {
 }
 
 model Student {
-  id      Int    @id @default(autoincrement())
+  id      String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
   course  Int
   group   String
-  user_id Int    @unique
+  user_id String    @db.Uuid
 
   User User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -46,8 +46,8 @@ model Student {
 }
 
 model Report {
-  id            Int @id @default(autoincrement())
-  university_id Int
+  id            String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+  university_id String  @db.Uuid
 
   Practices Practice[]
 
@@ -55,24 +55,25 @@ model Report {
 }
 
 model Practice {
-  id            Int    @id @default(autoincrement())
-  report_id     Int
-  student_id    Int
-  supervisor_id Int
-  direction_id  Int
+  id            String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+  report_id     String?  @db.Uuid
+  student_id    String  @db.Uuid
+  supervisor_id String  @db.Uuid
+  direction_id  String @db.Uuid
+  university_id  String  @db.Uuid
   type          String
-
-  Deadlines Deadlines[]
-
-  Report Report @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Deadlines Deadlines?
+  
+  Report Report? @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Direction Direction @relation(fields: [direction_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  University University @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Student Student @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Supervisor Supervisor @relation(fields: [supervisor_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Deadlines {
-  id          Int      @id @default(autoincrement())
-  practice_id Int      @unique
+  id          String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+  practice_id String    @db.Uuid @unique
   start       DateTime
   end         DateTime
 
@@ -80,7 +81,7 @@ model Deadlines {
 }
 
 model Direction {
-  id    Int    @id @default(autoincrement())
+  id    String    @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
   code  String
   title String
 
@@ -90,7 +91,7 @@ model Direction {
 }
 
 model University {
-  id             Int    @id @default(autoincrement())
+  id             String   @id @unique @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
   title          String
   abbreviation   String
   address        String
@@ -99,4 +100,6 @@ model University {
 
   Direction Direction[]
   Report    Report[]
+
+  Practice Practice[]
 }

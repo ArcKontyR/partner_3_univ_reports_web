@@ -25,7 +25,7 @@ const extension = Prisma.defineExtension({
                 });
             },
 
-            async findSupervisorById(id: number) {
+            async findSupervisorById(id: string) {
                 return await prisma.supervisor.findFirstOrThrow({
                     where: {
                         id

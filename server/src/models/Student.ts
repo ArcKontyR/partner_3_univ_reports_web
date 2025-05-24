@@ -26,7 +26,7 @@ const extension = Prisma.defineExtension({
                 });
             },
 
-            async findStudentById(id: number) {
+            async findStudentById(id: string) {
                 return await prisma.student.findFirstOrThrow({
                     where: {
                         id

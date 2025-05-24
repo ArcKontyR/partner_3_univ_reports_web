@@ -17,6 +17,7 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -32,3 +33,4 @@ coverage
 .env*
 dist
 password.*
+template

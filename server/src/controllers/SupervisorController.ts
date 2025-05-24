@@ -1,47 +1,14 @@
 
 import { RequestStatuses } from "../enums";
-import { Student, Supervisor, University } from "../interfaces";
+import { Supervisor, } from "../interfaces";
 import prisma from "../db";
 import { Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
+import { University } from "@prisma/client";
+import path from "node:path";
+import SupervisorService from "../services/SupervisorService";
 
 export default class SupervisorController {
-    
-    public static async sendUniversityInformation(req: Request, res) {
-        const universityData: University = req.body
-        if (!universityData) {
-            return res.status(RequestStatuses.BadRequest).json();
-        }
-        await prisma.university.createUniversity(universityData)
-
-        return res.status(RequestStatuses.Accepted).json();
-    }
-
-    public static async getUniversitiesInformation(req: Request, res) {
-        const universities: University[] = await prisma.university.getUniversities()
-        console.log(await prisma.university.getUniversities())
-        if (!universities) {
-            return res.status(RequestStatuses.NotFound).json();
-        }
-
-        return res.status(RequestStatuses.OK).json(universities);
-    }
-
-    public static async getUniversityInformation(req: Request, res) {
-        const universityId: number = Number(req.query.universityId)
-
-        if (!universityId) {
-            return res.status(RequestStatuses.BadRequest).json();
-        }
-
-        const universities: University[] = await prisma.university.getUniversities()
-
-        if (!universities) {
-            return res.status(RequestStatuses.NotFound).json();
-        }
-
-        return res.status(RequestStatuses.OK).json(universities.filter(university => university.id == universityId));
-    }
-
     public static async getSupervisorInformation(req: Request, res) {
         const supervisors: Supervisor[] = await prisma.supervisor.getSupervisors()
 
@@ -50,5 +17,31 @@ export default class SupervisorController {
         }
 
         return res.status(RequestStatuses.OK).json(supervisors);
+    }
+
+    public static async uploadSample(req: Request, res) {
+        if (!req.files || !req.files.file) {
+            return res.status(RequestStatuses.BadRequest).json({ message: 'Файл не был загружен' });
+        }
+        console.log(req.query)
+        const unId: string = req.query.id.toString()
+        const university: University = await prisma.university.findUniversityById(unId) as University;
+
+        const file: UploadedFile = req.files.file as UploadedFile;
+        const sample_path = '/template' + university.sample_path
+        const ext = file.name.split('.').pop()
+        const uploadSamplePath = path.join(__dirname, `../../${sample_path}/template.${ext}`);
+        console.log(uploadSamplePath)
+
+
+        file.mv(uploadSamplePath, (err) => {
+            if (err) {
+                return res.status(RequestStatuses.InternalServerError).json(err);
+            }
+
+            res.status(RequestStatuses.Accepted).json({
+                message: 'Файл загружен',
+            });
+        });
     }
 }

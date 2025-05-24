@@ -1,5 +1,5 @@
 export interface User {
-    id: number,
+    id: string,
     name: string,
     surname: string,
     patronymic: string,
@@ -7,53 +7,54 @@ export interface User {
 }
 
 export interface Student {
-    id: number,
+    id: string,
     course: number,
     group: string,
     User: User
 }
 
 export interface Supervisor {
-    id: number
+    id: string
     job_title: string
     User: User
 }
 
 export interface University {
-    id: number,
+    id: string,
     title: string,
     abbreviation: string,
     address: string,
     contact_number: string,
     sample_path: string,
 
-    Direction: Direction[]
-    Report: Report[]
+    Direction?: Direction[]
 }
 
 export interface Direction {
-    id: number,
+    id: string,
     code: string,
     title: String
 }
 
 export interface Practice {
-    id: number,
+    id: string,
     type: string,
-    Report: Report,
-    Direction: Direction,
-    Student: Student,
-    Supervisor: Supervisor,
-    Deadlines: Deadlines[],
+    Report?: Report,
+    Direction?: Direction,
+    Student?: Student,
+    University?: University,
+    Supervisor?: Supervisor,
+    Deadlines?: Deadlines,
 }
 
 export interface Deadlines {
-    id: number,
+    id: string,
     start: Date,
     end: Date
 }
 
-export interface Report {
-    id: number,
-    university_id: number
-}
+export interface Report{
+    id: string,
+    University?: University,
+    Practices?: Practice[]
+  }

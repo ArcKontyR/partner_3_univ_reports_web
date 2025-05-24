@@ -9,7 +9,7 @@ const extension = Prisma.defineExtension({
     model: {
         university: {
             async createUniversity(university: University) {
-                const { abbreviation, title, address, contact_number } = university;
+                const { title, address, contact_number } = university;
                 const abbr = title.split(" ").map(word => word[0]).join("").toLowerCase();
                 const sample_path = `/${transliterate(abbr).slice(0,7)}`
                 await prisma.university.create({
@@ -23,14 +23,13 @@ const extension = Prisma.defineExtension({
                 });
             },
 
-            async findUniversityById(id: number) {
+            async findUniversityById(id: string) {
                 return await prisma.university.findFirstOrThrow({
                     where: {
                         id
                     },
                     include: {
-                        Direction: true,
-                        Report: true
+                        Direction: true
                     }
                 });
             },
@@ -38,8 +37,7 @@ const extension = Prisma.defineExtension({
             async getUniversities(){
                 return await prisma.university.findMany({
                     include: {
-                        Direction: true,
-                        Report: true
+                        Direction: true
                     }
                 });
             }

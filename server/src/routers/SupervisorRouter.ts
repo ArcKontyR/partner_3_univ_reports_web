@@ -1,13 +1,15 @@
 
 import { Router } from 'express';
 import SupervisorController from '../controllers/SupervisorController';
+import { universityRouter } from './UniversityRouter';
+import { reportRouter } from './ReportRouter';
 
 const router = Router();
 
-router.post('/university', SupervisorController.sendUniversityInformation);
-router.get('/university', SupervisorController.getUniversitiesInformation);
-router.get('/university/:universityId', SupervisorController.getUniversityInformation);
+router.use('/university', universityRouter);
+router.use('/report', reportRouter);
 
 router.get('/', SupervisorController.getSupervisorInformation);
+router.post('/:id', SupervisorController.uploadSample)
 
 export { router as supervisorRouter };
