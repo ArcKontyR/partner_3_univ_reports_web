@@ -23,13 +23,30 @@ const extension = Prisma.defineExtension({
                 });
             },
 
+            async updateKeys(univId: string, keys: string[] ) {
+                await prisma.university.update({
+                    where:{
+                        id: univId
+                    },
+                    data:{
+                        Keys:{
+                            deleteMany: {},
+                            createMany: {
+                                data: keys.map(key => ({ value: key })),
+                            }
+                        }
+                    }
+                });
+            },
+
             async findUniversityById(id: string) {
                 return await prisma.university.findFirstOrThrow({
                     where: {
                         id
                     },
                     include: {
-                        Direction: true
+                        Direction: true,
+                        Keys: true
                     }
                 });
             },
@@ -37,7 +54,8 @@ const extension = Prisma.defineExtension({
             async getUniversities(){
                 return await prisma.university.findMany({
                     include: {
-                        Direction: true
+                        Direction: true,
+                        Keys: true
                     }
                 });
             }

@@ -100,6 +100,14 @@ model University {
 
   Direction Direction[]
   Report    Report[]
-
   Practice Practice[]
+  Keys Key[]
+}
+
+model Key{
+  id             String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  university_id String  @db.Uuid
+  value          String
+
+  University University @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

@@ -28,6 +28,7 @@ export interface University {
     sample_path: string,
 
     Direction?: Direction[]
+    Keys?: Key[]
 }
 
 export interface Direction {
@@ -58,4 +59,11 @@ export interface Report{
     creation_date?: Date,
     University?: University,
     Practices?: Practice[]
+}
+
+export interface Key{
+    id: string,
+    value: string,
+    
+    University?: University,
 }

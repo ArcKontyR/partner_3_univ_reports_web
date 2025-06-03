@@ -1,14 +1,21 @@
-import { copyFile, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from "node:fs";
+import { copyFile, existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { Report, University } from "../interfaces";
 import prisma from "../db";
 import path from "node:path";
-import mammoth from "mammoth";
 import puppeteer from "puppeteer";
-
+import ReportService from "./ReportService";
 
 export default class SupervisorService {
     public static async createReport(university: University) {
         const addedReportId = await prisma.report.createReport(university);
+        const selectObject = ReportService.buildPrismaSelect(university.Keys);
+
+        const reportData = await prisma.report.findFirst({
+            where: {
+                id: addedReportId
+            },
+            select: selectObject,
+        }) as unknown as Report;
 
         const relativeSamplePath = '/template' + university.sample_path
         const absoluteSampleDir = path.join(__dirname, `../../${relativeSamplePath}`);
@@ -25,14 +32,14 @@ export default class SupervisorService {
         console.log(absoluteSamplePath);
         const absoluteReportPath = path.join(__dirname, `../../${relativeSamplePath}/${addedReportId}.pdf`)
         if (ext === "docx" || ext === "doc") {
-            await SupervisorService.convertDocxToPdf(absoluteSamplePath, absoluteReportPath)
+            const html = await ReportService.generateHtml(reportData, university.Keys, absoluteSamplePath)
+            await SupervisorService.convertHtmlToPdf(html, absoluteReportPath)
         } else {
             copyFile(absoluteSamplePath, absoluteReportPath, () => { console.log(`Report added to ${absoluteReportPath}`) })
         }
 
         return
     }
-
 
     public static async deleteReport(reportId: string, univAbbr: string) {
         const relativeSamplePath = '/template' + univAbbr
@@ -50,20 +57,13 @@ export default class SupervisorService {
 
         const absoluteReportPath = path.join(__dirname, `../../${relativeSamplePath}/${reportId}.pdf`)
         console.log(absoluteReportPath)
-
-        return unlinkSync(absoluteReportPath)
+        if (existsSync(absoluteReportPath)) {
+            unlinkSync(absoluteReportPath)
+        }
     }
 
-    private static async addData() {
-        return
-    }
-
-    private static async convertDocxToPdf(templatePath, reportPath) {
+    private static async convertHtmlToPdf(html, reportPath) {
         try {
-            const { value: html } = await mammoth.convertToHtml({
-                buffer: await readFileSync(templatePath)
-            });
-
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
 

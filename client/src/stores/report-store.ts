@@ -8,7 +8,9 @@ export const useReportStore = defineStore('report', {
         reports: [] as Report[]
     }),
     getters: {
-
+        reverse: function (state) {
+            return [...state.reports].reverse();
+        }
     },
     actions: {
         async sendInfo(universityId: string) {
@@ -21,17 +23,17 @@ export const useReportStore = defineStore('report', {
         getReport(id: string) {
             this.report = this.reports.filter(r => r.id === id)[0]
         },
-        async deleteReport(id: string){
+        async deleteReport(id: string) {
             await api.delete(`supervisor/report/${id}`)
 
-            if (this.report.id === id){
+            if (this.report.id === id) {
                 this.report = {} as Report;
                 this.reports = this.reports.filter(r => r.id !== id)
             }
         },
-        async clearData(){
+        async clearData() {
             this.report = {} as Report,
-            this.reports = [] as Report[]
+                this.reports = [] as Report[]
         }
-    },
+    }
 });

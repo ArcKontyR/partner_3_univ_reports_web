@@ -8,6 +8,7 @@ import axios from 'axios'
 import PrimeVue from 'primevue/config';
 import InputMask from 'primevue/inputmask';
 import { usePassThrough } from 'primevue/passthrough'
+import MultiSelect from 'primevue/multiselect';
 
 const api = axios.create({
     baseURL: 'http://localhost:3001/api',
@@ -36,7 +37,7 @@ app.use(pinia)
 app.use(PrimeVue, {pt: CustomPreset})
 
 app.component('InputMask', InputMask);
-
+app.component('MultiSelect', MultiSelect);
 
 app.mount('#app')
 

@@ -6,7 +6,6 @@ import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { University } from "@prisma/client";
 import path from "node:path";
-import SupervisorService from "../services/SupervisorService";
 
 export default class SupervisorController {
     public static async getSupervisorInformation(req: Request, res) {
@@ -23,16 +22,18 @@ export default class SupervisorController {
         if (!req.files || !req.files.file) {
             return res.status(RequestStatuses.BadRequest).json({ message: 'Файл не был загружен' });
         }
-        console.log(req.query)
-        const unId: string = req.query.id.toString()
+        console.log(req.params)
+        const unId: string = req.params.id.toString()
+        const keys: string[] = JSON.parse(req.body.keys);
         const university: University = await prisma.university.findUniversityById(unId) as University;
-
+        if (!university){
+            return res.status(RequestStatuses.NotFound).json("Университет не найден");
+        }
+        await prisma.university.updateKeys(unId, keys)
         const file: UploadedFile = req.files.file as UploadedFile;
         const sample_path = '/template' + university.sample_path
         const ext = file.name.split('.').pop()
         const uploadSamplePath = path.join(__dirname, `../../${sample_path}/template.${ext}`);
-        console.log(uploadSamplePath)
-
 
         file.mv(uploadSamplePath, (err) => {
             if (err) {

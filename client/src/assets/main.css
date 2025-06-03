@@ -58,6 +58,12 @@ select {
   text-decoration: none;
 }
 
+.btn:disabled {
+  background: #d9d9d970;
+  color: rgba(0, 0, 0, 0.315);
+  cursor: not-allowed;
+}
+
 .btn:hover {
   background: #8f8585;
 }
