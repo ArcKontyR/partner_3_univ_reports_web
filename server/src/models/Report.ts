@@ -34,6 +34,25 @@ const extension = Prisma.defineExtension({
                         University: true
                     }
                 });
+            },
+            async getReport(reportId: string){
+                return await prisma.report.findFirst({
+                    where:{
+                        id: reportId
+                    },
+                    include: {
+                        Practices: true,
+                        University: true
+                    }
+                });
+            },
+
+            async deleteReport(reportId: string){
+                return await prisma.report.delete({
+                    where:{
+                        id: reportId
+                    }
+                })
             }
 
         }

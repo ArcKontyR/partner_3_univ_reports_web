@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Report" ADD COLUMN     "creation_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
