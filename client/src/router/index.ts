@@ -8,7 +8,8 @@ const router = createRouter({
       component: () => import('@/views/SupervisorView.vue'),
       children: [
         { path: '/supervisor', component: () => import('@/components/SupervisorForm.vue') },
-        { path: '/supervisor/university', component: () => import('@/components/UniversityForm.vue') }
+        { path: '/supervisor/university', component: () => import('@/components/UniversityForm.vue') },
+        { path: '/supervisor/university/report', component: () => import('@/components/ReportForm.vue') }
       ],
       props:{
         msg: "Партнер"

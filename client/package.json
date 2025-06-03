@@ -11,7 +11,11 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@types/pdfjs-dist": "^2.10.378",
     "axios": "^1.9.0",
+    "mammoth": "^1.9.0",
+    "pdfjs-dist": "^5.2.133",
+    "pdfobject": "^2.3.1",
     "pinia": "^3.0.2",
     "primevue": "^4.3.4",
     "vue": "^3.5.13",
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.1",
     "@types/node": "^22.15.21",
+    "@types/pdfobject": "^2.2.5",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vue/tsconfig": "^0.7.0",

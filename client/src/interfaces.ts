@@ -55,6 +55,7 @@ export interface Deadlines {
 
 export interface Report{
     id: string,
+    creation_date?: Date,
     University?: University,
     Practices?: Practice[]
-  }
+}

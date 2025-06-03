@@ -19,8 +19,7 @@ const api = axios.create({
 const CustomPreset = usePassThrough(
     {
         InputMask: {
-                class: ['leading-none font-light text-2xl']
-            
+                class: ['name-field']
         }
     },
     {

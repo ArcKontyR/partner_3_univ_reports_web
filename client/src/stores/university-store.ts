@@ -29,10 +29,14 @@ export const useUniversityStore = defineStore('university', {
             this.universities = response.data;
         },
         async getUniversity(id: string) {
+            if (this.universities.length == 0){
+                this.getUniversities()
+            }
             this.university = this.universities.filter(u => u.id === id)[0]
         },
         async clearData() {
             this.university = defaultUniversity;
+            this.universities = [] as University[]
         }
     }
     

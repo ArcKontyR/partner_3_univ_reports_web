@@ -14,6 +14,11 @@ export default defineConfig((env) => {
   const serverAPIPath = envars.VITE_SERVER_API_PATH ?? '/api';
 
   return {
+    optimizeDeps: {
+      include: [
+        'pdfjs-dist/build/pdf.worker.mjs'
+      ]
+    },
     envDir: './',
     plugins: [
       vue(),
