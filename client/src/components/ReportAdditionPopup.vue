@@ -68,7 +68,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const selectedFile = ref<File | null>(null);
@@ -155,6 +155,7 @@ const sendFile = async () => {
     if (fileInput.value) {
       fileInput.value.value = "";
     }
+    emit('close')
   }
 };
 
