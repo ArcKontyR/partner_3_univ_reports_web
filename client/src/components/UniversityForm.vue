@@ -51,7 +51,7 @@
           <button type="button" class="btn" @click="addTemplate">
             Добавить шаблон
           </button>
-          <button type="button" class="btn">Редактировать</button>
+          <button type="button" class="btn" :disabled="!universityStore.hasChanges" @click="universityStore.updateInfo">Редактировать</button>
         </div>
       </div>
 
@@ -114,7 +114,7 @@
 <script setup lang="ts">
 import FormSentPopup from "./Popup.vue";
 import { useUniversityStore } from "@/stores/university-store";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useReportStore } from "@/stores/report-store";
 import ReportAdditionPopup from "./ReportAdditionPopup.vue";

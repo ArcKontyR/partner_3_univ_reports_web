@@ -16,9 +16,13 @@ const defaultUniversity = {
 export const useUniversityStore = defineStore('university', {
     state: () => ({
         university: defaultUniversity,
-        universities: [] as University[]
+        universities: [] as University[],
+        initialUniversity: defaultUniversity
     }),
     getters: {
+        hasChanges: function (state) {
+            return JSON.stringify(state.university) !== JSON.stringify(state.initialUniversity);
+        }
     },
     actions: {
         async sendInfo() {
@@ -28,16 +32,21 @@ export const useUniversityStore = defineStore('university', {
             const response = await api.get('supervisor/university');
             this.universities = response.data;
         },
-        async getUniversity(id: string) {
-            if (this.universities.length == 0){
+        getUniversity(id: string) {
+            if (this.universities.length == 0) {
                 this.getUniversities()
             }
             this.university = this.universities.filter(u => u.id === id)[0]
+            this.initialUniversity = { ...this.university }
         },
-        async clearData() {
+        clearData() {
             this.university = defaultUniversity;
             this.universities = [] as University[]
+        },
+        async updateInfo() {
+            await api.patch('supervisor/university', this.university);
+            this.initialUniversity = { ...this.university }
         }
     }
-    
+
 });

@@ -8,6 +8,20 @@ const extension = Prisma.defineExtension({
     name: 'UniversityModel',
     model: {
         university: {
+            async updateUniversity(university: University) {
+                const { id, title, address, contact_number } = university;
+                await prisma.university.update({
+                    where:{
+                        id
+                    },
+                    data: {
+                        title,
+                        address,
+                        contact_number
+                    }
+                });
+            },
+
             async createUniversity(university: University) {
                 const { title, address, contact_number } = university;
                 const abbr = title.split(" ").map(word => word[0]).join("").toLowerCase();

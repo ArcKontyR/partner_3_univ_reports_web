@@ -5,6 +5,17 @@ import prisma from "../db";
 import { Request, Response } from "express";
 
 export default class UniversityController {
+
+    public static async updateUniversityInformation(req: Request, res) {
+        const universityData: University = req.body
+        if (!universityData) {
+            return res.status(RequestStatuses.BadRequest).json();
+        }
+        await prisma.university.updateUniversity(universityData)
+
+        return res.status(RequestStatuses.OK).json();
+    }
+
     public static async sendUniversityInformation(req: Request, res) {
         const universityData: University = req.body
         if (!universityData) {
