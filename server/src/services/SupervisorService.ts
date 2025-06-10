@@ -9,6 +9,10 @@ export default class SupervisorService {
     public static async createReport(university: University) {
         const addedReportId = await prisma.report.createReport(university);
         const selectObject = ReportService.buildPrismaSelect(university.Keys);
+        
+        if (Object.keys(selectObject).length === 0){
+            return false
+        }
 
         const reportData = await prisma.report.findFirst({
             where: {
@@ -38,7 +42,7 @@ export default class SupervisorService {
             copyFile(absoluteSamplePath, absoluteReportPath, () => { console.log(`Report added to ${absoluteReportPath}`) })
         }
 
-        return
+        return true
     }
 
     public static async deleteReport(reportId: string, univAbbr: string) {

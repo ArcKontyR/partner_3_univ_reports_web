@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="section">
+    <div class="section" v-if="universityId">
       <div class="header">
         <h3>Документы</h3>
         <div class="actions">
@@ -133,7 +133,9 @@ const resStatus = ref<"success" | "error">("success");
 
 const addTemplateShowModal = ref(false);
 const createReportButtonMessage = ref("Сформировать отчёт");
-const createReportButtonDisabled = ref(false);
+const disableReportBtn = ref(false);
+
+const createReportButtonDisabled = computed(() => disableReportBtn.value || !universityStore.templateExists )
 
 
 
@@ -166,14 +168,21 @@ const addTemplate = () => {
 async function createReport() {
   try {
     createReportButtonMessage.value = "Формируем отчёт...";
-    createReportButtonDisabled.value = true;
+    disableReportBtn.value = true;
     await reportStore.createReport(universityId!);
     await reportStore.getReports(universityId!);
+    
+    resStatus.value = "success";
+    resMessage.value = "Отчёт создан";
   } catch (err) {
-    alert(err)
+    resStatus.value = "error";
+    resMessage.value = `Произошла ошибка при создании отчёта`;
+    
   } finally {
     createReportButtonMessage.value = "Сформировать отчёт";
-    createReportButtonDisabled.value = false;
+    disableReportBtn.value = false;
+    
+    showModal.value = true;
   }
 }
 

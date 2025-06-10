@@ -60,6 +60,7 @@ import axios from "axios";
 import mammoth from "mammoth";
 import { computed, ref } from "vue";
 import FieldSelector from "./models/FieldSelector.vue";
+import { useUniversityStore } from "@/stores/university-store";
 const props = defineProps({
   showModal: Boolean,
   universityId: {
@@ -74,9 +75,8 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const selectedFile = ref<File | null>(null);
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
-const successMessage = ref<string | null>(null);
 
-const selectedFields = ref<string[]>([]);
+const selectedFields = ref<string[]>(['Practices.Student.User.surname']);
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -129,7 +129,7 @@ const handleFile = async (file: File) => {
     return;
   }
 
-  if (!await findString(file, "#table#")) {
+  if (!(await findString(file, "#table#"))) {
     errorMessage.value = "Файл не содержит тег #table#";
 
     return;
@@ -155,7 +155,7 @@ const sendFile = async () => {
     if (fileInput.value) {
       fileInput.value.value = "";
     }
-    emit('close')
+    emit("close");
   }
 };
 
@@ -164,9 +164,11 @@ const uploadFile = async (file: File) => {
 
   try {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("fileName", file.name);
-    formData.append("keys", JSON.stringify(selectedFields.value))
+    if (file) {
+      formData.append("file", file);
+      formData.append("fileName", file.name);
+    }
+    formData.append("keys", JSON.stringify(selectedFields.value));
 
     const response = await api.post(
       `/supervisor/${props.universityId}`,
@@ -178,8 +180,6 @@ const uploadFile = async (file: File) => {
       }
     );
 
-    successMessage.value = "Файл успешно загружен!";
-    console.log("Ответ сервера:", response.data);
   } catch (error) {
     handleUploadError(error);
   } finally {
@@ -187,6 +187,7 @@ const uploadFile = async (file: File) => {
     if (fileInput.value) {
       fileInput.value.value = "";
     }
+    useUniversityStore().getUniversity(props.universityId)
   }
 };
 

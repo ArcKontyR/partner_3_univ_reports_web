@@ -15,7 +15,11 @@ export default class ReportController {
             return res.status(RequestStatuses.NotFound).json()
         }
 
-        await SupervisorService.createReport(university)
+        const created = await SupervisorService.createReport(university)
+        if (!created){
+            return res.status(RequestStatuses.BadRequest).json()
+        }
+
         return res.status(RequestStatuses.Created).json()
     }
 

@@ -8,8 +8,17 @@ import { University } from "@prisma/client";
 import path from "node:path";
 import bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
+import { existsSync } from "node:fs";
 
 export default class SupervisorController {
+
+    public static async isTemplateLoaded(req: Request, res) {
+        const unId: string = req.params.id.toString()
+        const university: University = await prisma.university.findUniversityById(unId) as University;
+        const samplePath = path.join(__dirname, `../../template/${university.sample_path}/template.docx`);
+        return res.status(RequestStatuses.OK).json(existsSync(samplePath))
+    }
+
     public static async getSupervisorInformation(req: Request, res) {
         const supervisors: Supervisor[] = await prisma.supervisor.getSupervisors()
 
@@ -34,8 +43,7 @@ export default class SupervisorController {
         await prisma.university.updateKeys(unId, keys)
         const file: UploadedFile = req.files.file as UploadedFile;
         const sample_path = '/template' + university.sample_path
-        const ext = file.name.split('.').pop()
-        const uploadSamplePath = path.join(__dirname, `../../${sample_path}/template.${ext}`);
+        const uploadSamplePath = path.join(__dirname, `../../${sample_path}/template.docx`);
 
         file.mv(uploadSamplePath, (err) => {
             if (err) {

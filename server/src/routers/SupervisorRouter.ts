@@ -12,5 +12,6 @@ router.use('/report', reportRouter);
 router.get('/', SupervisorController.getSupervisorInformation);
 router.post('/login', SupervisorController.login);
 router.post('/:id', SupervisorController.uploadSample)
+router.get('/:id', SupervisorController.isTemplateLoaded)
 
 export { router as supervisorRouter };

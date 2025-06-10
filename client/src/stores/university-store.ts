@@ -1,4 +1,4 @@
-import type { Direction, University, Report } from '@/interfaces';
+import type { Direction, University, Report, Key } from '@/interfaces';
 import api from '@/main';
 import { defineStore } from 'pinia';
 
@@ -10,14 +10,16 @@ const defaultUniversity = {
     contact_number: '',
     sample_path: '/',
     Direction: [] as Direction[],
-    Report: [] as Report[]
+    Report: [] as Report[],
+    Keys: [] as Key[]
 } as University
 
 export const useUniversityStore = defineStore('university', {
     state: () => ({
         university: defaultUniversity,
         universities: [] as University[],
-        initialUniversity: defaultUniversity
+        initialUniversity: defaultUniversity,
+        templateExists: false
     }),
     getters: {
         hasChanges: function (state) {
@@ -32,19 +34,24 @@ export const useUniversityStore = defineStore('university', {
             const response = await api.get('supervisor/university');
             this.universities = response.data;
         },
-        getUniversity(id: string) {
+        async getUniversity(id: string) {
             if (this.universities.length == 0) {
                 this.getUniversities()
             }
             this.university = this.universities.filter(u => u.id === id)[0]
             this.initialUniversity = { ...this.university }
+            const response = await api.get(`supervisor/${this.university.id}`);
+            this.templateExists = Boolean(response.data);
         },
         clearData() {
             this.university = defaultUniversity;
-            this.universities = [] as University[]
+            this.universities = [] as University[];
+            this.templateExists = false
         },
         async updateInfo() {
             await api.patch('supervisor/university', this.university);
+            const response = await api.get(`supervisor/${this.university.id}`);
+            this.templateExists = Boolean(response.data);
             this.initialUniversity = { ...this.university }
         }
     }
