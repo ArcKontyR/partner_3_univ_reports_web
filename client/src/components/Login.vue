@@ -7,7 +7,7 @@
           class="name-field"
           v-model="login"
           type="login"
-          placeholder="Login"
+          placeholder="Введите логин"
           required
         />
       </div>
@@ -17,7 +17,7 @@
           class="name-field"
           v-model="password"
           type="password"
-          placeholder="Password"
+          placeholder="Введите пароль"
           required
         />
       </div>
