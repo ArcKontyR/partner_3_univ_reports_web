@@ -164,12 +164,17 @@ const addTemplate = () => {
 };
 
 async function createReport() {
-  createReportButtonMessage.value = "Формируем отчёт...";
-  createReportButtonDisabled.value = true;
-  await reportStore.sendInfo(universityId!);
-  await reportStore.getReports(universityId!);
-  createReportButtonMessage.value = "Сформировать отчёт";
-  createReportButtonDisabled.value = false;
+  try {
+    createReportButtonMessage.value = "Формируем отчёт...";
+    createReportButtonDisabled.value = true;
+    await reportStore.createReport(universityId!);
+    await reportStore.getReports(universityId!);
+  } catch (err) {
+    alert(err)
+  } finally {
+    createReportButtonMessage.value = "Сформировать отчёт";
+    createReportButtonDisabled.value = false;
+  }
 }
 
 async function deleteReport(id: string) {
@@ -186,8 +191,7 @@ onMounted(() => {
   if (universityId) {
     universityStore.getUniversity(universityId);
     reportStore.getReports(universityId);
-  } else {
-  }
+  } 
 });
 </script>
 

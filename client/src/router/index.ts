@@ -1,3 +1,4 @@
+import { useSupervisorStore } from '@/stores/supervisor-store';
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -9,20 +10,47 @@ const router = createRouter({
       children: [
         { path: '/supervisor', component: () => import('@/components/SupervisorForm.vue') },
         { path: '/supervisor/university', component: () => import('@/components/UniversityForm.vue') },
-        { path: '/supervisor/university/report', component: () => import('@/components/ReportForm.vue') }
+        { path: '/supervisor/university/report', component: () => import('@/components/ReportForm.vue') },
       ],
-      props:{
+      meta: {
+        requiresAuth: true
+      },
+      props: {
         msg: "Партнер"
       }
     },
     {
       path: '/student',
       component: () => import('@/views/StudentView.vue'),
-      props:{
+      props: {
         msg: "Студент"
+      }
+    },
+    {
+      path: '/',
+      component: () => import('@/views/SupervisorView.vue'),
+      children: [
+        {
+          path: '/login',
+          component: () => import('@/components/Login.vue'),
+        },
+        { path: '', redirect: "/student" },
+      ],
+      props: {
+        msg: "Партнер - Авторизация"
       }
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const supervisorStore = useSupervisorStore();
+
+  if (to.meta.requiresAuth && !supervisorStore.token) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router

@@ -10,6 +10,7 @@ router.use('/university', universityRouter);
 router.use('/report', reportRouter);
 
 router.get('/', SupervisorController.getSupervisorInformation);
+router.post('/login', SupervisorController.login);
 router.post('/:id', SupervisorController.uploadSample)
 
 export { router as supervisorRouter };

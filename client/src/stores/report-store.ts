@@ -13,7 +13,7 @@ export const useReportStore = defineStore('report', {
         }
     },
     actions: {
-        async sendInfo(universityId: string) {
+        async createReport(universityId: string) {
             await api.post('supervisor/report', { id: universityId });
         },
         async getReports(universityId: string) {

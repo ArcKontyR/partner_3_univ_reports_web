@@ -1,11 +1,13 @@
 
 import { RequestStatuses } from "../enums";
-import { Supervisor, } from "../interfaces";
+import { Supervisor } from "../interfaces";
 import prisma from "../db";
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { University } from "@prisma/client";
 import path from "node:path";
+import bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 
 export default class SupervisorController {
     public static async getSupervisorInformation(req: Request, res) {
@@ -26,7 +28,7 @@ export default class SupervisorController {
         const unId: string = req.params.id.toString()
         const keys: string[] = JSON.parse(req.body.keys);
         const university: University = await prisma.university.findUniversityById(unId) as University;
-        if (!university){
+        if (!university) {
             return res.status(RequestStatuses.NotFound).json("Университет не найден");
         }
         await prisma.university.updateKeys(unId, keys)
@@ -45,4 +47,17 @@ export default class SupervisorController {
             });
         });
     }
+
+    public static async login (req: Request, res) {
+        const { login, password } = req.body;
+
+        const sv = await prisma.supervisor.findUnique({ where: { login } });
+        if (!sv || !(await bcrypt.compare(password, sv.password))) {
+            return res.status(RequestStatuses.Unauthorized).json({ error: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign({ id: sv.id }, "your-secret-key", { expiresIn: '1h' });
+
+        res.json({ token });
+    };
 }

@@ -39,7 +39,9 @@ export default class ReportService {
         const headers = selectedFields.map(field => {
             return `<th>${ReportService.getFieldLabel(field.value)}</th>`;
         }).join('');
-
+        if (!data){
+            data = []
+        }
         const rows = data.map(row => {
             const cells = selectedFields.map(field => {
                 let value = row[field.value] || '';

@@ -13,6 +13,8 @@ const extension = Prisma.defineExtension({
                 await prisma.supervisor.create({
                     data: {
                         job_title,
+                        login: "",
+                        password: "",
                         User: {
                             create: {
                                 name,

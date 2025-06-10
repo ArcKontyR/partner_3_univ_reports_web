@@ -36,8 +36,6 @@ export default class ReportController {
         const universityFolder = req.params.univAbbr.toString();
         const reportId = req.params.reportId.toString();
         const filePath = path.join(__dirname, `../../template/${universityFolder}/${reportId}.pdf`);
-        console.log(reportId)
-        console.log(filePath)
         if (!filePath){
             return res.status(RequestStatuses.NotFound).send('File not found');
         }

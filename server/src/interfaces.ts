@@ -16,6 +16,8 @@ export interface Student {
 export interface Supervisor {
     id: string
     job_title: string
+    login: string
+    password: string
     User: User
 }
 

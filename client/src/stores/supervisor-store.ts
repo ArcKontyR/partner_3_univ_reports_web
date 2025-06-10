@@ -13,10 +13,18 @@ export const useSupervisorStore = defineStore('supervisor', {
                 email: '',
             }
         } as Supervisor,
-        supervisors: [] as Supervisor[]
+        supervisors: [] as Supervisor[],
+        token: null
     }),
     getters: {},
     actions: {
+        async login(login: string, password: string) {
+            const response = await api.post('/supervisor/login', { login, password });
+            this.token = response.data.token;
+        },
+        logout() {
+            this.token = null;
+        },
         async sendInfo() {
             await api.post('supervisor', this.supervisor);
         },
