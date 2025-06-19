@@ -38,7 +38,7 @@
 
     <div class="section" v-if="universityId">
       <div class="header">
-        <h3>Документы</h3>
+        <h3>Договоры</h3>
         <div class="actions">
           <button
             type="button"
@@ -51,7 +51,6 @@
           <button type="button" class="btn" @click="addTemplate">
             Добавить шаблон
           </button>
-          <button type="button" class="btn" :disabled="!universityStore.hasChanges" @click="universityStore.updateInfo">Редактировать</button>
         </div>
       </div>
 
@@ -63,7 +62,7 @@
           class="item"
         >
           <span class="form-field-title">{{
-            `Отчёт №${i + 1} от ${new Date(
+            `Договор №${i + 1} от ${new Date(
               report.creation_date!.toString()
             ).toLocaleDateString()} - ${new Date(
               report.creation_date!.toString()
@@ -95,7 +94,8 @@
         @click="clearData"
         >Назад</RouterLink
       >
-      <button type="submit" class="btn">Добавить</button>
+      <button v-if="!universityId" type="submit" class="btn">Добавить</button>
+      <button v-else type="button" class="btn" :disabled="!universityStore.hasChanges" @click="universityStore.updateInfo">Редактировать</button>
     </div>
   </form>
   <FormSentPopup
@@ -132,7 +132,7 @@ const resMessage = ref("");
 const resStatus = ref<"success" | "error">("success");
 
 const addTemplateShowModal = ref(false);
-const createReportButtonMessage = ref("Сформировать отчёт");
+const createReportButtonMessage = ref("Сформировать договор");
 const disableReportBtn = ref(false);
 
 const createReportButtonDisabled = computed(() => disableReportBtn.value || !universityStore.templateExists )
@@ -167,19 +167,19 @@ const addTemplate = () => {
 
 async function createReport() {
   try {
-    createReportButtonMessage.value = "Формируем отчёт...";
+    createReportButtonMessage.value = "Формируем договор...";
     disableReportBtn.value = true;
     await reportStore.createReport(universityId!);
     await reportStore.getReports(universityId!);
     
     resStatus.value = "success";
-    resMessage.value = "Отчёт создан";
+    resMessage.value = "Договор создан";
   } catch (err) {
     resStatus.value = "error";
-    resMessage.value = `Произошла ошибка при создании отчёта`;
+    resMessage.value = `Произошла ошибка при создании договора`;
     
   } finally {
-    createReportButtonMessage.value = "Сформировать отчёт";
+    createReportButtonMessage.value = "Сформировать договор";
     disableReportBtn.value = false;
     
     showModal.value = true;

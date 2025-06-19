@@ -50,7 +50,7 @@ export default class SupervisorController {
                 return res.status(RequestStatuses.InternalServerError).json(err);
             }
 
-            res.status(RequestStatuses.Accepted).json({
+            return res.status(RequestStatuses.Accepted).json({
                 message: 'Файл загружен',
             });
         });
@@ -66,6 +66,6 @@ export default class SupervisorController {
 
         const token = jwt.sign({ id: sv.id }, "your-secret-key", { expiresIn: '1h' });
 
-        res.json({ token });
+        return res.status(RequestStatuses.OK).json({ token });
     };
 }
